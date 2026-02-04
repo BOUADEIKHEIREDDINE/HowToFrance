@@ -29,10 +29,17 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+   opacity: 1;
+   transition: opacity 0.8s ease-out;
 }
 
 #intro-overlay.hidden {
   display: none;
+}
+
+.intro-fade-out {
+  opacity: 0;
+  pointer-events: none;
 }
 
 #skip-btn {
@@ -40,60 +47,54 @@ a {
   top: 3%;
   right: 4%;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(224, 122, 95, 0.95);
   color: #ffffff;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  font-size: 0.85rem;
+  border: 1px solid rgba(224, 122, 95, 1);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease, opacity 0.3s ease;
   backdrop-filter: blur(4px);
 }
 
 #skip-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(224, 122, 95, 1);
   transform: translateY(-1px);
+}
+
+#skip-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
 }
 
 #intro-text-container {
   position: absolute;
-  top: 15%;
+  top: 10vh;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
   pointer-events: none;
 }
 
-/* Intro text lines */
-.intro-text-line {
-  font-size: 1.4rem;
+/* Single text element with fade */
+#intro-main-text {
+  font-size: 1.5rem;
   font-weight: 500;
   opacity: 0;
-  padding: 0 5%;
+  padding: 0 8vw;
+  transition: opacity 0.3s ease-in-out;
 }
 
-#intro-line-1 {
-  animation: introLine1 20s ease-out forwards;
-}
-
-#intro-line-2 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: introLine2 20s ease-out forwards;
-}
-
-#intro-line-3 {
-  margin-top: 0.4rem;
-  font-size: 1.1rem;
-  opacity: 0;
-  animation: introLine3 20s ease-out forwards;
+.intro-text-visible {
+  opacity: 1;
 }
 
 #shapes-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 1;
 }
 
 .shape {
@@ -150,19 +151,20 @@ a {
   height: 26%;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   background:
-    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.18), transparent 55%),
-    rgba(11, 28, 45, 0.7);
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.15), transparent 55%),
+    rgba(11, 28, 45, 0.5);
   box-shadow:
-    0 0 25px rgba(0, 180, 255, 0.35),
-    0 0 55px rgba(255, 255, 255, 0.18);
+    0 0 18px rgba(0, 180, 255, 0.28),
+    0 0 40px rgba(255, 255, 255, 0.15);
   opacity: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   animation: htfZonePulse 20s ease-out forwards;
+  z-index: 1;
 }
 #htf-zone-label {
   font-size: 1.2rem;
@@ -180,11 +182,12 @@ a {
 #final-text-container {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 45%;
   transform: translate3d(-50%, -10%, 0);
   text-align: center;
   opacity: 0;
   animation: finalIntroText 20s ease-out forwards;
+  z-index: 3;
 }
 
 #final-main {
@@ -198,34 +201,6 @@ a {
   opacity: 0.85;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-/* Keyframes for text */
-@keyframes introLine1 {
-  0% { opacity: 0; }
-  15% { opacity: 0; }   /* First ~3s: empty blue screen */
-  20% { opacity: 1; }
-  35% { opacity: 1; }
-  40% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-@keyframes introLine2 {
-  0% { opacity: 0; }
-  39% { opacity: 0; }
-  45% { opacity: 1; }
-  60% { opacity: 1; }
-  65% { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-@keyframes introLine3 {
-  0% { opacity: 0; }
-  59% { opacity: 0; }
-  62% { opacity: 1; }
-  80% { opacity: 1; }
-  85% { opacity: 0; }
-  100% { opacity: 0; }
 }
 
 /* Keyframes for shapes */
@@ -311,15 +286,16 @@ a {
 @keyframes htfZonePulse {
   0% { opacity: 0; box-shadow: none; }
   40% { opacity: 0; }
-  45% { opacity: 1; }
-  70% {
-    opacity: 1;
+  45% { opacity: 0.7; }
+  65% {
+    opacity: 0.9;
     box-shadow:
       0 0 25px rgba(0, 180, 255, 0.35),
       0 0 55px rgba(255, 255, 255, 0.18);
   }
   100% {
-    opacity: 0.9;
+    opacity: 0.2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -331,9 +307,7 @@ a {
 }
 
 @media (max-width: 768px) {
-  #intro-line-1,
-  #intro-line-2,
-  #intro-line-3 {
+  #intro-main-text {
     font-size: 1.3rem;
   }
 

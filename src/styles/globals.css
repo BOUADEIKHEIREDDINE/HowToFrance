@@ -23,18 +23,17 @@ a {
 #intro-overlay {
   position: fixed;
   inset: 0;
-  background: #0b1c2d;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.06), transparent 55%),
+    radial-gradient(circle at 80% 100%, rgba(0, 0, 0, 0.4), transparent 60%),
+    #0b1c2d;
   color: #ffffff;
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-   opacity: 1;
-   transition: opacity 0.8s ease-out;
-}
-
-#intro-overlay.hidden {
-  display: none;
+  opacity: 1;
+  transition: opacity 1s ease-out;
 }
 
 .intro-fade-out {
@@ -68,28 +67,39 @@ a {
   outline-offset: 2px;
 }
 
+/* Bottom-center text (Caption au-dessus de tout) */
 #intro-text-container {
-  position: absolute;
-  top: 10vh;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 7vh;
   text-align: center;
   pointer-events: none;
+  z-index: 2147483647;
+  width: 100%;
 }
 
-/* Single text element with fade */
 #intro-main-text {
-  font-size: 1.5rem;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
   font-weight: 500;
   opacity: 0;
   padding: 0 8vw;
-  transition: opacity 0.3s ease-in-out;
+  max-width: 70ch;
+  color: #ffffff !important;
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.55),
+    0 0 26px rgba(0, 180, 255, 0.18);
+  letter-spacing: 0.01em;
+  transition: opacity 0.45s ease-in-out;
 }
 
 .intro-text-visible {
   opacity: 1;
 }
 
+/* Shapes + layout */
 #shapes-layer {
   position: absolute;
   inset: 0;
@@ -105,56 +115,203 @@ a {
   opacity: 0;
   transform: translate3d(0, 0, 0);
   transition:
-    transform 3s ease-in-out,
-    opacity 1s ease-in-out,
-    border-radius 2s ease-in-out,
-    box-shadow 1.5s ease-in-out;
+    transform 2.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.6s ease-out,
+    border-radius 5s ease-in-out,
+    box-shadow 1.2s ease-in-out;
 }
 
-#square {
-  left: 35%;
-  top: 52%;
-  border-radius: 0%;
+/* Community (right cluster) */
+#community {
+  position: absolute;
+  inset: 0;
 }
 
-.circle {
+.community-circle {
   border-radius: 50%;
+  transform: translate3d(var(--start-x, 0), var(--start-y, 0), 0) scale(0.6);
+  opacity: 0;
 }
 
-#circle-1 {
-  left: 68%;
-  top: 42%;
+.community-circle.circle-1 {
+  --end-x: 65vw;
+  --end-y: 36vh;
+  --start-x: 110vw;
+  --start-y: 10vh;
 }
 
-#circle-2 {
-  left: 75%;
-  top: 55%;
+.community-circle.circle-2 {
+  --end-x: 73vw;
+  --end-y: 52vh;
+  --start-x: 90vw;
+  --start-y: 90vh;
 }
 
-#circle-3 {
-  left: 70%;
-  top: 65%;
+.community-circle.circle-3 {
+  --end-x: 67vw;
+  --end-y: 62vh;
+  --start-x: 120vw;
+  --start-y: 80vh;
 }
 
-#circle-4 {
-  left: 80%;
-  top: 48%;
+.community-circle.circle-4 {
+  --end-x: 78vw;
+  --end-y: 44vh;
+  --start-x: 80vw;
+  --start-y: -20vh;
 }
 
+.community-visible .community-circle {
+  opacity: 1;
+  transform: translate3d(var(--end-x), var(--end-y), 0) scale(1);
+}
+
+/* Hover / wobble continu des cercles */
+.community-hover #circle-1 {
+  animation: communityHover1 7s ease-in-out infinite alternate;
+}
+.community-hover #circle-2 {
+  animation: communityHover2 9s ease-in-out infinite alternate;
+}
+.community-hover #circle-3 {
+  animation: communityHover3 8s ease-in-out infinite alternate;
+}
+.community-hover #circle-4 {
+  animation: communityHover4 10s ease-in-out infinite alternate;
+}
+
+@keyframes communityHover1 {
+  0% { transform: translate3d(65vw, 36vh, 0) scale(1); }
+  50% { transform: translate3d(66.2vw, 34.5vh, 0) scale(1.02); }
+  100% { transform: translate3d(63.8vw, 37.2vh, 0) scale(0.98); }
+}
+@keyframes communityHover2 {
+  0% { transform: translate3d(73vw, 52vh, 0) scale(1); }
+  50% { transform: translate3d(74.5vw, 53.4vh, 0) scale(1.015); }
+  100% { transform: translate3d(71.6vw, 50.8vh, 0) scale(0.985); }
+}
+@keyframes communityHover3 {
+  0% { transform: translate3d(67vw, 62vh, 0) scale(1); }
+  50% { transform: translate3d(68.2vw, 63.5vh, 0) scale(1.02); }
+  100% { transform: translate3d(66vw, 60.8vh, 0) scale(0.98); }
+}
+@keyframes communityHover4 {
+  0% { transform: translate3d(78vw, 44vh, 0) scale(1); }
+  50% { transform: translate3d(79.4vw, 42.6vh, 0) scale(1.018); }
+  100% { transform: translate3d(76.8vw, 45.2vh, 0) scale(0.982); }
+}
+
+/* Pulse léger de la communauté quand le nouveau cercle rejoint */
+.community-pulse #community {
+  animation: communityPulse 0.45s ease-out 1;
+}
+
+@keyframes communityPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Main square that becomes a circle */
+#square {
+  top: 52%;
+  left: 50%;
+  transform: translate3d(-120vw, -50%, 0);
+  border-radius: 8px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition:
+    transform 2.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease-out,
+    border-radius 5s ease-in-out,
+    box-shadow 1.2s ease-in-out;
+}
+
+.square-entered #square {
+  opacity: 1;
+  transform: translate3d(-30vw, -50%, 0);
+}
+
+.square-hovering #square {
+  animation: squareHover 3s ease-in-out infinite alternate;
+}
+
+/* Square se dirige vers le bloc HTF (bord gauche) */
+.square-at-htf #square {
+  transform: translate3d(-22vw, -50%, 0);
+}
+
+/* Traversée lente à l'intérieur du bloc HTF (gauche -> centre -> droite, 5s) */
+.square-in-block #square {
+  transform: translate3d(8vw, -50%, 0);
+  border-radius: 8px;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+  transition:
+    transform 5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease-out,
+    border-radius 5s ease-in-out,
+    box-shadow 1.2s ease-in-out;
+}
+
+/* Morph en cercle sur la même trajectoire, déclenché plus tard */
+.square-morphed #square {
+  transform: translate3d(8vw, -50%, 0);
+  border-radius: 999px;
+  box-shadow: 0 0 32px rgba(255, 255, 255, 0.4);
+  transition:
+    transform 5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease-out,
+    border-radius 5s ease-in-out,
+    box-shadow 1.2s ease-in-out;
+}
+
+/* New circle travels to community */
+.square-to-community #square {
+  /* destination: au milieu du cluster de cercles, comme avant */
+  transform: translate3d(72vw, -56%, 0);
+  opacity: 1;
+}
+
+/* Position finale du nouveau cercle dans la communauté + hover subtil comme les autres */
+.square-at-community #square {
+  transform: translate3d(72vw, -56%, 0);
+  border-radius: 999px;
+  box-shadow: 0 0 26px rgba(255, 255, 255, 0.3);
+  animation: communityHoverNew 9s ease-in-out infinite alternate;
+}
+
+@keyframes communityHoverNew {
+  0% { transform: translate3d(72vw, -56%, 0) scale(1); }
+  50% { transform: translate3d(73.2vw, -57.4%, 0) scale(1.02); }
+  100% { transform: translate3d(70.8vw, -54.8%, 0) scale(0.98); }
+}
+
+@keyframes squareHover {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.18);
+  }
+}
+
+/* HTF card */
 #htf-zone {
   position: absolute;
   left: 50%;
   top: 55%;
-  width: 30%;
+  width: 32%;
   max-width: 420px;
   min-width: 260px;
   height: 26%;
-  transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0) scale(0.9);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background:
-    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.15), transparent 55%),
-    rgba(11, 28, 45, 0.5);
+    radial-gradient(circle at 30% 0%, rgba(255, 255, 255, 0.12), transparent 55%),
+    rgba(11, 28, 45, 0.7);
   box-shadow:
     0 0 18px rgba(0, 180, 255, 0.28),
     0 0 40px rgba(255, 255, 255, 0.15);
@@ -163,9 +320,13 @@ a {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  animation: htfZonePulse 20s ease-out forwards;
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1),
+    box-shadow 0.6s ease-out;
   z-index: 1;
 }
+
 #htf-zone-label {
   font-size: 1.2rem;
   font-weight: 600;
@@ -176,135 +337,16 @@ a {
 #htf-zone-sub-label {
   margin-top: 0.25rem;
   font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-#final-text-container {
-  position: absolute;
-  left: 50%;
-  top: 45%;
-  transform: translate3d(-50%, -10%, 0);
-  text-align: center;
-  opacity: 0;
-  animation: finalIntroText 20s ease-out forwards;
-  z-index: 3;
-}
-
-#final-main {
-  font-size: 1.9rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-}
-
-#final-sub {
-  font-size: 1.1rem;
   opacity: 0.85;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
-/* Keyframes for shapes */
-.square-anim {
-  animation: squareJourney 20s ease-in-out forwards;
-  opacity: 1;
+.htf-visible {
+  opacity: 1 !important;
+  transform: translate3d(-50%, -50%, 0) scale(1);
 }
 
-@keyframes squareJourney {
-  0% {
-    opacity: 0;
-    transform: translate3d(-20vw, -50%, 0);
-    border-radius: 0%;
-    box-shadow: none;
-  }
-  15% {
-    opacity: 0;
-    transform: translate3d(-20vw, -50%, 0);
-  }
-  25% {
-    opacity: 1;
-    transform: translate3d(-5vw, -40%, 0);
-    border-radius: 0%;
-  }
-  45% {
-    transform: translate3d(0vw, -40%, 0);
-    border-radius: 50%;
-    box-shadow: 0 0 32px rgba(255, 255, 255, 0.35);
-  }
-  70% {
-    transform: translate3d(10vw, -45%, 0);
-  }
-  100% {
-    transform: translate3d(0vw, -48%, 0);
-  }
-}
-
-.circle-anim-1,
-.circle-anim-2,
-.circle-anim-3,
-.circle-anim-4 {
-  opacity: 1;
-}
-
-.circle-anim-1 {
-  animation: circleCluster1 20s ease-in-out forwards;
-}
-.circle-anim-2 {
-  animation: circleCluster2 20s ease-in-out forwards;
-}
-.circle-anim-3 {
-  animation: circleCluster3 20s ease-in-out forwards;
-}
-.circle-anim-4 {
-  animation: circleCluster4 20s ease-in-out forwards;
-}
-
-@keyframes circleCluster1 {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  15% { opacity: 0; transform: translate3d(0, 0, 0); }
-  25% { opacity: 1; transform: translate3d(3vw, -1vh, 0); }
-  100% { transform: translate3d(-3vw, -2vh, 0); }
-}
-@keyframes circleCluster2 {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  15% { opacity: 0; transform: translate3d(0, 0, 0); }
-  25% { opacity: 1; transform: translate3d(2vw, 1vh, 0); }
-  100% { transform: translate3d(0vw, 0vh, 0); }
-}
-@keyframes circleCluster3 {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  15% { opacity: 0; transform: translate3d(0, 0, 0); }
-  25% { opacity: 1; transform: translate3d(2vw, 2vh, 0); }
-  100% { transform: translate3d(2vw, 2vh, 0); }
-}
-@keyframes circleCluster4 {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  15% { opacity: 0; transform: translate3d(0, 0, 0); }
-  25% { opacity: 1; transform: translate3d(3vw, 0vh, 0); }
-  100% { transform: translate3d(1vw, -1vh, 0); }
-}
-
-@keyframes htfZonePulse {
-  0% { opacity: 0; box-shadow: none; }
-  40% { opacity: 0; }
-  45% { opacity: 0.7; }
-  65% {
-    opacity: 0.9;
-    box-shadow:
-      0 0 25px rgba(0, 180, 255, 0.35),
-      0 0 55px rgba(255, 255, 255, 0.18);
-  }
-  100% {
-    opacity: 0.2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
-}
-
-@keyframes finalIntroText {
-  0% { opacity: 0; }
-  80% { opacity: 0; }
-  90% { opacity: 1; }
-  100% { opacity: 1; }
-}
+/* Final cinematic text */
+/* Le texte final utilise le même caption (intro-main-text), stylé via React */
 
 @media (max-width: 768px) {
   #intro-main-text {

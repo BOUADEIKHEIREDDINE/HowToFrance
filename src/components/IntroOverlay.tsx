@@ -1,64 +1,252 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const INTRO_DURATION_MS = 20000;
+type IntroPhase =
+  | 'idle'
+  | 'community_in'
+  | 'community_text'
+  | 'square_in'
+  | 'square_hover'
+  | 'text_you'
+  | 'text_steps'
+  | 'htf_in'
+  | 'morphing'
+  | 'circle_to_community'
+  | 'final_text'
+  | 'finished';
+
+// Multiplicateur global pour une intro plus lente / cinématique
+const SPEED = 2.0;
+
+// Durées (en ms) – valeurs “de base” * SPEED
+const DURATIONS = {
+  initialBlank: 2000 * SPEED, // cible ~4s
+  communityGather: 1400 * SPEED, // cible ~2.8s
+  textFade: 450, // fade in/out
+  textCommunity: 1600 * SPEED, // cible ~3.2s
+  textYou: 1500 * SPEED, // cible ~3.0s
+  textSteps: 1750 * SPEED, // cible ~3.5s
+  betweenTexts: 300, // petit gap entre textes
+  squareIn: 1200 * SPEED, // cible ~2.4s
+  htfIn: 900 * SPEED, // cible ~1.8s
+  squareToHtf: 1100 * SPEED, // cible ~2.2s
+  squareInBlock: 5000, // 5s obligatoires dans le bloc HTF
+  circleExit: 950 * SPEED, // cible ~1.9s
+  finalTextVisible: 1900 * SPEED, // cible ~3.8s
+  overlayFadeOut: 1000,
+  skipFadeOut: 350,
+} as const;
 
 export default function IntroOverlay() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const [phase, setPhase] = useState<IntroPhase>('idle');
   const [currentMessage, setCurrentMessage] = useState<string>('');
   const [isTextVisible, setIsTextVisible] = useState(false);
+  const [showCommunity, setShowCommunity] = useState(false);
+  const [communityHover, setCommunityHover] = useState(false);
+  const [communityPulse, setCommunityPulse] = useState(false);
+  const [squareEntered, setSquareEntered] = useState(false);
+  const [squareAtHtf, setSquareAtHtf] = useState(false);
+  const [squareInBlock, setSquareInBlock] = useState(false);
+  const [squareMorphed, setSquareMorphed] = useState(false);
+  const [squareAtCommunity, setSquareAtCommunity] = useState(false);
+  const [htfVisible, setHtfVisible] = useState(false);
 
-  // Text timeline + smooth fade transitions and overlay fade-out
+  const timeoutsRef = useRef<number[]>([]);
+  const skippedRef = useRef(false);
+
+  // Helper “timeline” basé sur des Promises, pour éviter les cascades de setTimeout
+  const wait = (ms: number) =>
+    new Promise<void>((resolve) => {
+      const id = window.setTimeout(() => {
+        if (skippedRef.current) return;
+        resolve();
+      }, ms);
+      timeoutsRef.current.push(id);
+    });
+
+  // Block scroll while overlay is visible
+  useEffect(() => {
+    if (!visible) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [visible]);
+
+  // Main timeline
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const timeouts: number[] = [];
-    const schedule = (fn: () => void, delay: number) => {
-      const id = window.setTimeout(fn, delay);
-      timeouts.push(id);
+    const prefersReduced =
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+      setVisible(false);
+      setPhase('finished');
+      return;
+    }
+
+    let cancelled = false;
+    skippedRef.current = false;
+
+    const runTimeline = async () => {
+      setVisible(true);
+      setPhase('idle');
+
+      // 0) Écran bleu vide
+      await wait(DURATIONS.initialBlank);
+      if (cancelled || skippedRef.current) return;
+
+      // 1) Cercles: rassemblement lent (visuel via CSS, on lance tout de suite)
+      setShowCommunity(true);
+      setPhase('community_in');
+
+      // 2) Texte A: "This is the frensh community" – apparaît vite après les cercles
+      setIsTextVisible(false);
+      await wait(DURATIONS.textFade);
+      if (cancelled || skippedRef.current) return;
+
+      setCurrentMessage('This is the frensh community');
+      setIsTextVisible(true);
+      setPhase('community_text');
+      await wait(DURATIONS.textCommunity);
+      if (cancelled || skippedRef.current) return;
+
+      // Le hover subtil de la communauté démarre après que le texte A ait été visible
+      setCommunityHover(true);
+
+      setIsTextVisible(false);
+      await wait(DURATIONS.betweenTexts);
+      if (cancelled || skippedRef.current) return;
+
+      // 3) Carré: entrée lente depuis la gauche
+      setSquareEntered(true);
+      setPhase('square_in');
+      await wait(DURATIONS.squareIn);
+      if (cancelled || skippedRef.current) return;
+
+      // Hover du carré
+      setPhase('square_hover');
+
+      // 4) Texte B: "This is you"
+      setCurrentMessage('This is you');
+      setIsTextVisible(true);
+      setPhase('text_you');
+      await wait(DURATIONS.textYou);
+      if (cancelled || skippedRef.current) return;
+
+      setIsTextVisible(false);
+      await wait(DURATIONS.betweenTexts);
+      if (cancelled || skippedRef.current) return;
+
+      // 5) Texte C: "if you want to integrate this society, there are many steps to take."
+      setCurrentMessage(
+        'if you want to integrate this society, there are many steps to take.',
+      );
+      setIsTextVisible(true);
+      setPhase('text_steps');
+      await wait(DURATIONS.textSteps);
+      if (cancelled || skippedRef.current) return;
+
+      setIsTextVisible(false);
+      await wait(DURATIONS.betweenTexts);
+      if (cancelled || skippedRef.current) return;
+
+      // 6) Bloc HTF + texte D
+      setHtfVisible(true);
+      await wait(DURATIONS.htfIn);
+      if (cancelled || skippedRef.current) return;
+
+      setCurrentMessage('And we will help you take these steps');
+      setIsTextVisible(true);
+      setPhase('htf_in');
+
+      // Le carré commence à se diriger vers le bloc HTF
+      // On déclenche immédiatement la phase suivante pour un mouvement continu,
+      // sans pause intermédiaire visible.
+      setSquareAtHtf(true);
+
+      // 7) Carré DANS le bloc HTF pendant 5s (morphing progressif)
+      // On commence par la traversée, puis on déclenche le morph en cercle 1s plus tard
+      setSquareInBlock(true);
+      setPhase('morphing');
+      await wait(1000);
+      if (cancelled || skippedRef.current) return;
+
+      setSquareMorphed(true);
+      await wait(DURATIONS.squareInBlock - 1000);
+      if (cancelled || skippedRef.current) return;
+
+      // 8) Sortie du nouveau cercle vers la communauté + disparition du texte D
+      setIsTextVisible(false);
+      setPhase('circle_to_community');
+      await wait(DURATIONS.circleExit);
+      if (cancelled || skippedRef.current) return;
+      setSquareAtCommunity(true);
+
+      // Petit pulse de la communauté quand le nouveau cercle rejoint
+      setCommunityPulse(true);
+      await wait(400);
+      setCommunityPulse(false);
+      if (cancelled || skippedRef.current) return;
+
+      // 9) Texte final italic bottom-center
+      setCurrentMessage('Welcome to How To France');
+      setIsTextVisible(true);
+      setPhase('final_text');
+      await wait(DURATIONS.finalTextVisible);
+      if (cancelled || skippedRef.current) return;
+
+      // 10) Fade-out overlay
+      setIsFadingOut(true);
+      await wait(DURATIONS.overlayFadeOut);
+      if (cancelled || skippedRef.current) return;
+
+      setVisible(false);
+      setPhase('finished');
     };
 
-    const changeText = (text: string, atMs: number) => {
-      schedule(() => {
-        setIsTextVisible(false);
-        schedule(() => {
-          setCurrentMessage(text);
-          setIsTextVisible(true);
-        }, 250);
-      }, atMs);
-    };
-
-    // 0–3s: empty blue screen (no text)
-    changeText('You arrive in a new country.', 3000);
-    changeText('You feel different.', 7000);
-    changeText("And that's okay.", 11000);
-    changeText('You are not alone.', 14000);
-    changeText('We help you integrate.', 17000);
-
-    // Start fading out overlay near the end, then hide completely
-    schedule(() => setIsFadingOut(true), INTRO_DURATION_MS - 1000);
-    schedule(() => setVisible(false), INTRO_DURATION_MS);
+    runTimeline();
 
     return () => {
-      timeouts.forEach((id) => window.clearTimeout(id));
+      skippedRef.current = true;
+      cancelled = true;
+      timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      timeoutsRef.current = [];
     };
   }, []);
 
   const handleSkip = () => {
-    setVisible(false);
+    skippedRef.current = true;
+    timeoutsRef.current.forEach((id) => window.clearTimeout(id));
+    timeoutsRef.current = [];
+    setIsFadingOut(true);
+    window.setTimeout(() => {
+      setVisible(false);
+      setPhase('finished');
+    }, DURATIONS.skipFadeOut);
   };
 
   if (!visible) {
     return null;
   }
 
+  const overlayClassName = [
+    'intro-overlay-root',
+    isFadingOut ? 'intro-fade-out' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
-    <div
-      id="intro-overlay"
-      className={isFadingOut ? 'intro-fade-out' : ''}
-    >
+    <div id="intro-overlay" className={overlayClassName}>
       <button
         id="skip-btn"
         type="button"
@@ -68,35 +256,77 @@ export default function IntroOverlay() {
         Skip intro
       </button>
 
-      <div id="intro-text-container" aria-live="polite">
-        <div
-          id="intro-main-text"
-          className={isTextVisible ? 'intro-text-visible' : ''}
-        >
-          {currentMessage}
+      {/* Shapes layer */}
+      <div
+        id="shapes-layer"
+        className={[
+          showCommunity ? 'community-visible' : '',
+          communityHover ? 'community-hover' : '',
+          communityPulse ? 'community-pulse' : '',
+          squareEntered ? 'square-entered' : '',
+          squareAtHtf ? 'square-at-htf' : '',
+          squareInBlock ? 'square-in-block' : '',
+          squareMorphed ? 'square-morphed' : '',
+          phase === 'circle_to_community' ? 'square-to-community' : '',
+          squareAtCommunity ? 'square-at-community' : '',
+          phase === 'square_hover' || phase === 'text_you' || phase === 'text_steps'
+            ? 'square-hovering'
+            : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        {/* Community circles (right side) */}
+        <div id="community">
+          <div id="circle-1" className="shape circle community-circle circle-1" />
+          <div id="circle-2" className="shape circle community-circle circle-2" />
+          <div id="circle-3" className="shape circle community-circle circle-3" />
+          <div id="circle-4" className="shape circle community-circle circle-4" />
         </div>
-      </div>
 
-      <div id="shapes-layer">
-        <div id="square" className="shape square-anim" />
+        {/* The square that becomes the circle */}
+        <div id="square" className="shape square" />
 
-        <div id="circle-1" className="shape circle circle-anim-1" />
-        <div id="circle-2" className="shape circle circle-anim-2" />
-        <div id="circle-3" className="shape circle circle-anim-3" />
-        <div id="circle-4" className="shape circle circle-anim-4" />
-
-        <div id="htf-zone">
+        {/* HTF block */}
+        <div id="htf-zone" className={htfVisible ? 'htf-visible' : ''}>
           <div id="htf-zone-label">HTF</div>
           <div id="htf-zone-sub-label">How To France</div>
         </div>
       </div>
 
-      <div id="final-text-container">
-        <div id="final-main">Welcome to France.</div>
-        <div id="final-sub">How To France</div>
+      {/* Bottom-center text layer, rendu en dernier pour être au-dessus de tout */}
+      <div
+        aria-live="polite"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+          paddingBottom: '7vh',
+          pointerEvents: 'none',
+          zIndex: 2147483647,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 'clamp(1.15rem, 2.2vw, 1.7rem)',
+            fontWeight: 500,
+            padding: '0 8vw',
+            maxWidth: '70ch',
+            color: '#ffffff',
+            textShadow:
+              '0 2px 14px rgba(0, 0, 0, 0.55), 0 0 26px rgba(0, 180, 255, 0.18)',
+            letterSpacing: '0.01em',
+            opacity: isTextVisible ? 1 : 0,
+            transition: 'opacity 0.45s ease-in-out',
+            textAlign: 'center',
+          }}
+        >
+          {currentMessage}
+        </div>
       </div>
     </div>
   );
 }
-
 

@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './../styles/globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ChatbotWidget from '@/components/ChatbotWidget';
+import FloatingHelp from '@/components/FloatingHelp';
 import IntroOverlay from '@/components/IntroOverlay';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,12 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className + ' bg-background text-gray-900'}>
+      <body className={inter.className + ' bg-background text-foreground'}>
         <IntroOverlay />
         <Navbar />
         <main className="container mx-auto px-4 py-10">{children}</main>
         <Footer />
-        <ChatbotWidget />
+        <FloatingHelp />
       </body>
     </html>
   );

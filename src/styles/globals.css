@@ -2,21 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  @apply bg-background text-gray-900;
-}
+@layer base {
+  :root {
+    --background: 220 33% 99%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --muted: 220 16% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 220 13% 91%;
+    --primary: 221 83% 16%;
+    --primary-foreground: 210 40% 98%;
+    --accent: 17 72% 56%;
+    --accent-foreground: 210 40% 98%;
+    --radius: 16px;
+  }
 
-body {
-  font-family: theme('fontFamily.sans');
-}
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+    --muted: 222 24% 14%;
+    --muted-foreground: 215 20% 65%;
+    --border: 222 24% 16%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+    --accent: 17 72% 56%;
+    --accent-foreground: 210 40% 98%;
+  }
 
-a {
-  @apply text-inherit;
-}
+  html,
+  body {
+    @apply bg-background text-foreground;
+  }
 
-::selection {
-  background-color: #e07a5f33;
+  body {
+    font-family: theme('fontFamily.sans');
+    min-height: 100dvh;
+    background-image:
+      radial-gradient(circle at 15% 0%, hsl(var(--accent) / 0.08), transparent 45%),
+      radial-gradient(circle at 85% 25%, hsl(var(--primary) / 0.10), transparent 50%),
+      radial-gradient(circle at 40% 95%, rgba(0, 0, 0, 0.05), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  a {
+    @apply text-inherit;
+  }
+
+  ::selection {
+    background-color: hsl(var(--accent) / 0.25);
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 3px;
+  }
 }
 
 /* Intro overlay styles */
@@ -105,6 +147,13 @@ a {
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+/* Fade-out final: on force aussi le layer des shapes (sécurité anti-glitch) */
+.intro-fade-out #shapes-layer {
+  opacity: 0;
 }
 
 .shape {
@@ -128,9 +177,31 @@ a {
 }
 
 .community-circle {
-  border-radius: 50%;
   transform: translate3d(var(--start-x, 0), var(--start-y, 0), 0) scale(0.6);
   opacity: 0;
+}
+
+/* Circle member */
+.community-circle--circle {
+  border-radius: 50%;
+  background: #f4f5f7;
+}
+
+/* Square member */
+.community-circle--square {
+  border-radius: 8px;
+  background: #f4f5f7;
+}
+
+/* Triangle member */
+.community-circle--triangle {
+  border-radius: 0;
+  background: transparent;
+  width: 0;
+  height: 0;
+  border-left: 3.5vmin solid transparent;
+  border-right: 3.5vmin solid transparent;
+  border-bottom: 6vmin solid #f4f5f7;
 }
 
 .community-circle.circle-1 {
@@ -181,24 +252,24 @@ a {
 }
 
 @keyframes communityHover1 {
-  0% { transform: translate3d(65vw, 36vh, 0) scale(1); }
-  50% { transform: translate3d(66.2vw, 34.5vh, 0) scale(1.02); }
-  100% { transform: translate3d(63.8vw, 37.2vh, 0) scale(0.98); }
+  0% { transform: translate3d(65vw, 36vh, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(66.2vw, 34.5vh, 0) scale(1.02) rotate(4deg); }
+  100% { transform: translate3d(63.8vw, 37.2vh, 0) scale(0.98) rotate(-3deg); }
 }
 @keyframes communityHover2 {
-  0% { transform: translate3d(73vw, 52vh, 0) scale(1); }
-  50% { transform: translate3d(74.5vw, 53.4vh, 0) scale(1.015); }
-  100% { transform: translate3d(71.6vw, 50.8vh, 0) scale(0.985); }
+  0% { transform: translate3d(73vw, 52vh, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(74.5vw, 53.4vh, 0) scale(1.015) rotate(-3deg); }
+  100% { transform: translate3d(71.6vw, 50.8vh, 0) scale(0.985) rotate(2deg); }
 }
 @keyframes communityHover3 {
-  0% { transform: translate3d(67vw, 62vh, 0) scale(1); }
-  50% { transform: translate3d(68.2vw, 63.5vh, 0) scale(1.02); }
-  100% { transform: translate3d(66vw, 60.8vh, 0) scale(0.98); }
+  0% { transform: translate3d(67vw, 62vh, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(68.2vw, 63.5vh, 0) scale(1.02) rotate(3deg); }
+  100% { transform: translate3d(66vw, 60.8vh, 0) scale(0.98) rotate(-2deg); }
 }
 @keyframes communityHover4 {
-  0% { transform: translate3d(78vw, 44vh, 0) scale(1); }
-  50% { transform: translate3d(79.4vw, 42.6vh, 0) scale(1.018); }
-  100% { transform: translate3d(76.8vw, 45.2vh, 0) scale(0.982); }
+  0% { transform: translate3d(78vw, 44vh, 0) scale(1) rotate(0deg); }
+  50% { transform: translate3d(79.4vw, 42.6vh, 0) scale(1.018) rotate(-4deg); }
+  100% { transform: translate3d(76.8vw, 45.2vh, 0) scale(0.982) rotate(3deg); }
 }
 
 /* Pulse léger de la communauté quand le nouveau cercle rejoint */
@@ -222,7 +293,6 @@ a {
   transition:
     transform 2.4s cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 0.7s ease-out,
-    border-radius 5s ease-in-out,
     box-shadow 1.2s ease-in-out;
 }
 
@@ -248,19 +318,17 @@ a {
   transition:
     transform 5s cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 0.7s ease-out,
-    border-radius 5s ease-in-out,
     box-shadow 1.2s ease-in-out;
 }
 
-/* Morph en cercle sur la même trajectoire, déclenché plus tard */
+/* Square reste un carré (pas de morphing) */
 .square-morphed #square {
   transform: translate3d(8vw, -50%, 0);
-  border-radius: 999px;
+  border-radius: 8px;
   box-shadow: 0 0 32px rgba(255, 255, 255, 0.4);
   transition:
     transform 5s cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity 0.7s ease-out,
-    border-radius 5s ease-in-out,
     box-shadow 1.2s ease-in-out;
 }
 
@@ -271,18 +339,17 @@ a {
   opacity: 1;
 }
 
-/* Position finale du nouveau cercle dans la communauté + hover subtil comme les autres */
+/* Position finale du carré dans la communauté - statique, pas de mouvement */
 .square-at-community #square {
   transform: translate3d(72vw, -56%, 0);
-  border-radius: 999px;
+  border-radius: 8px;
   box-shadow: 0 0 26px rgba(255, 255, 255, 0.3);
-  animation: communityHoverNew 9s ease-in-out infinite alternate;
 }
 
 @keyframes communityHoverNew {
   0% { transform: translate3d(72vw, -56%, 0) scale(1); }
-  50% { transform: translate3d(73.2vw, -57.4%, 0) scale(1.02); }
-  100% { transform: translate3d(70.8vw, -54.8%, 0) scale(0.98); }
+  50% { transform: translate3d(72.5vw, -56%, 0) scale(1); }
+  100% { transform: translate3d(72vw, -56%, 0) scale(1); }
 }
 
 @keyframes squareHover {
@@ -300,7 +367,7 @@ a {
 /* HTF card */
 #htf-zone {
   position: absolute;
-  left: 50%;
+  left: 40%;
   top: 55%;
   width: 32%;
   max-width: 420px;

@@ -32,10 +32,37 @@ const DURATIONS = {
   htfIn: 900 * SPEED, // cible ~1.8s
   squareToHtf: 1100 * SPEED, // cible ~2.2s
   squareInBlock: 5000, // 5s obligatoires dans le bloc HTF
+  morphDelay: 1000, // Délai avant que le carré commence à se transformer en cercle (en ms)
+  morphDuration: 2500, // Durée du morph carré->cercle (en ms). Place-le dans les 5s du bloc HTF.
   circleExit: 950 * SPEED, // cible ~1.9s
   finalTextVisible: 1900 * SPEED, // cible ~3.8s
   overlayFadeOut: 1000,
   skipFadeOut: 350,
+} as const;
+
+// ============================================
+// CONFIGURATION DES POSITIONS DU CARRÉ
+// ============================================
+// Modifie ces coordonnées pour contrôler tous les mouvements du carré
+// Format: { x: 'XXvw', y: 'YY%' } où x = position horizontale, y = position verticale
+const SQUARE_POSITIONS = {
+  // Position initiale (hors écran à gauche)
+  initial: { x: '-120vw', y: '-50%' },
+  
+  // Position après entrée (hover avant les textes)
+  entered: { x: '-30vw', y: '-50%' },
+  
+  // Position avant d'entrer dans le bloc HTF
+  beforeHtf: { x: '-22vw', y: '-50%' },
+  
+  // Position au début de la traversée du bloc HTF (bord gauche)
+  htfStart: { x: '-22vw', y: '-50%' },
+  
+  // Position à la fin de la traversée du bloc HTF (bord droit)
+  htfEnd: { x: '8vw', y: '-50%' },
+  
+  // Position finale dans la communauté (statique, pas de mouvement après)
+  final: { x: '15vw', y: '-56%' },
 } as const;
 
 export default function IntroOverlay() {
@@ -53,6 +80,11 @@ export default function IntroOverlay() {
   const [squareMorphed, setSquareMorphed] = useState(false);
   const [squareAtCommunity, setSquareAtCommunity] = useState(false);
   const [htfVisible, setHtfVisible] = useState(false);
+  
+  // Position actuelle du carré (contrôlée par coordonnées)
+  const [squarePosition, setSquarePosition] = useState<{ x: string; y: string }>(SQUARE_POSITIONS.initial);
+  const [squareBorderRadius, setSquareBorderRadius] = useState<string>('8px');
+  const [squareOpacity, setSquareOpacity] = useState<number>(0);
 
   const timeoutsRef = useRef<number[]>([]);
   const skippedRef = useRef(false);
@@ -99,6 +131,10 @@ export default function IntroOverlay() {
     const runTimeline = async () => {
       setVisible(true);
       setPhase('idle');
+      // Initialiser la position du carré
+      setSquarePosition(SQUARE_POSITIONS.initial);
+      setSquareOpacity(0);
+      setSquareBorderRadius('8px');
 
       // 0) Écran bleu vide
       await wait(DURATIONS.initialBlank);
@@ -128,6 +164,8 @@ export default function IntroOverlay() {
 
       // 3) Carré: entrée lente depuis la gauche
       setSquareEntered(true);
+      setSquarePosition(SQUARE_POSITIONS.entered);
+      setSquareOpacity(1);
       setPhase('square_in');
       await wait(DURATIONS.squareIn);
       if (cancelled || skippedRef.current) return;
@@ -172,21 +210,25 @@ export default function IntroOverlay() {
       // On déclenche immédiatement la phase suivante pour un mouvement continu,
       // sans pause intermédiaire visible.
       setSquareAtHtf(true);
+      setSquarePosition(SQUARE_POSITIONS.beforeHtf);
 
-      // 7) Carré DANS le bloc HTF pendant 5s (morphing progressif)
-      // On commence par la traversée, puis on déclenche le morph en cercle 1s plus tard
+      // 7) Carré DANS le bloc HTF pendant 5s (traversée simple, pas de morphing)
       setSquareInBlock(true);
+      setSquarePosition(SQUARE_POSITIONS.htfStart);
       setPhase('morphing');
-      await wait(1000);
+      await wait(DURATIONS.morphDelay);
       if (cancelled || skippedRef.current) return;
 
       setSquareMorphed(true);
-      await wait(DURATIONS.squareInBlock - 1000);
+      // Le carré reste un carré (pas de morphing en cercle)
+      setSquarePosition(SQUARE_POSITIONS.htfEnd);
+      await wait(DURATIONS.squareInBlock - DURATIONS.morphDelay);
       if (cancelled || skippedRef.current) return;
 
       // 8) Sortie du nouveau cercle vers la communauté + disparition du texte D
       setIsTextVisible(false);
       setPhase('circle_to_community');
+      setSquarePosition(SQUARE_POSITIONS.final);
       await wait(DURATIONS.circleExit);
       if (cancelled || skippedRef.current) return;
       setSquareAtCommunity(true);
@@ -276,16 +318,45 @@ export default function IntroOverlay() {
           .filter(Boolean)
           .join(' ')}
       >
-        {/* Community circles (right side) */}
+        {/* Community cluster (right side) - mixed shapes */}
         <div id="community">
-          <div id="circle-1" className="shape circle community-circle circle-1" />
-          <div id="circle-2" className="shape circle community-circle circle-2" />
-          <div id="circle-3" className="shape circle community-circle circle-3" />
-          <div id="circle-4" className="shape circle community-circle circle-4" />
+          {/* Circle */}
+          <div
+            id="circle-1"
+            className="shape community-circle community-circle--circle circle-1"
+          />
+          {/* Square */}
+          <div
+            id="circle-2"
+            className="shape community-circle community-circle--square circle-2"
+          />
+          {/* Triangle */}
+          <div
+            id="circle-3"
+            className="shape community-circle community-circle--triangle circle-3"
+          />
+          {/* Circle */}
+          <div
+            id="circle-4"
+            className="shape community-circle community-circle--circle circle-4"
+          />
         </div>
 
-        {/* The square that becomes the circle */}
-        <div id="square" className="shape square" />
+        {/* The square that becomes the circle - contrôlé par coordonnées */}
+        <div
+          id="square"
+          className="shape square"
+          style={{
+            transform: `translate3d(${squarePosition.x}, ${squarePosition.y}, 0)`,
+            opacity: squareOpacity,
+            borderRadius: squareBorderRadius,
+            transition: phase === 'morphing' || phase === 'circle_to_community'
+              ? `transform ${DURATIONS.squareInBlock}ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.7s ease-out`
+              : phase === 'square_in'
+              ? 'transform 2.4s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.7s ease-out'
+              : 'transform 2.4s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.7s ease-out',
+          }}
+        />
 
         {/* HTF block */}
         <div id="htf-zone" className={htfVisible ? 'htf-visible' : ''}>
@@ -318,7 +389,7 @@ export default function IntroOverlay() {
             textShadow:
               '0 2px 14px rgba(0, 0, 0, 0.55), 0 0 26px rgba(0, 180, 255, 0.18)',
             letterSpacing: '0.01em',
-            opacity: isTextVisible ? 1 : 0,
+            opacity: isFadingOut ? 0 : isTextVisible ? 1 : 0,
             transition: 'opacity 0.45s ease-in-out',
             textAlign: 'center',
           }}

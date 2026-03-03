@@ -1,5 +1,7 @@
 'use client';
 
+import type { ReactNode } from 'react';
+
 import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
@@ -14,6 +16,7 @@ type SectionCardsProps = {
     title: string;
     description: string;
     href: string;
+    icon?: ReactNode;
   }[];
 };
 
@@ -36,7 +39,7 @@ export default function SectionCards({ title, subtitle, cards }: SectionCardsPro
         viewport={{ once: true, amount: 0.25 }}
         className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
       >
-        {cards.map(({ title: cardTitle, description, href }) => (
+        {cards.map(({ title: cardTitle, description, href, icon }) => (
           <motion.div key={cardTitle} variants={fadeUp}>
             <Link
               href={href}
@@ -53,7 +56,9 @@ export default function SectionCards({ title, subtitle, cards }: SectionCardsPro
 
                 <div className="relative p-6">
                   <div className="flex items-start gap-4">
-                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-muted/60 text-foreground shadow-sm" />
+                    <div className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-muted/60 text-foreground shadow-sm">
+                      {icon}
+                    </div>
 
                     <div className="min-w-0">
                       <h3 className="text-lg font-semibold leading-tight">

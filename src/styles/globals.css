@@ -4,18 +4,33 @@
 
 @layer base {
   :root {
-    --background: 220 33% 99%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --muted: 220 16% 96%;
-    --muted-foreground: 215 16% 47%;
-    --border: 220 13% 91%;
-    --primary: 221 83% 16%;
+    /* =========================================================
+       How To France — Global design tokens (as requested)
+       ========================================================= */
+    --color-primary: #1e3a5f;
+    --color-accent: #3b82f6;
+    --color-accent-soft: #eff6ff;
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-surface: #f8fafc;
+    --color-card: #ffffff;
+    --color-text: #1e293b;
+    --color-muted: #64748b;
+
+    /* Tailwind (shadcn-style) tokens backed by HSL values */
+    --background: 210 40% 98%; /* #F8FAFC */
+    --foreground: 215 28% 17%; /* #1E293B */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 215 28% 17%;
+    --muted: 214 32% 91%; /* ~#E2E8F0 */
+    --muted-foreground: 215 16% 47%; /* ~#64748B */
+    --border: 214 32% 91%;
+    --primary: 213 52% 24%; /* #1E3A5F */
     --primary-foreground: 210 40% 98%;
-    --accent: 17 72% 56%;
+    --accent: 217 91% 60%; /* #3B82F6 */
     --accent-foreground: 210 40% 98%;
-    --radius: 16px;
+    --radius: 12px;
   }
 
   .dark {
@@ -40,10 +55,11 @@
   body {
     font-family: theme('fontFamily.sans');
     min-height: 100dvh;
+    background-color: var(--color-surface);
     background-image:
-      radial-gradient(circle at 15% 0%, hsl(var(--accent) / 0.08), transparent 45%),
-      radial-gradient(circle at 85% 25%, hsl(var(--primary) / 0.10), transparent 50%),
-      radial-gradient(circle at 40% 95%, rgba(0, 0, 0, 0.05), transparent 55%);
+      radial-gradient(circle at 12% 0%, rgba(59, 130, 246, 0.10), transparent 44%),
+      radial-gradient(circle at 88% 18%, rgba(30, 58, 95, 0.10), transparent 52%),
+      radial-gradient(circle at 50% 92%, rgba(15, 23, 42, 0.06), transparent 58%);
     background-attachment: fixed;
   }
 
@@ -58,6 +74,138 @@
   :focus-visible {
     outline: 2px solid hsl(var(--accent));
     outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* =========================================================
+     Typography rhythm (use as classes; do not force global tags)
+     ========================================================= */
+  .htf-h1 {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    color: var(--color-primary);
+  }
+
+  .htf-h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--color-primary);
+    padding-left: 12px;
+    border-left: 3px solid var(--color-accent);
+  }
+
+  .htf-h3 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .htf-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--color-text);
+  }
+
+  .htf-muted {
+    color: var(--color-muted);
+  }
+
+  /* =========================================================
+     Card + hover (premium)
+     ========================================================= */
+  .htf-card {
+    background: var(--color-card);
+    border-radius: 12px;
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .htf-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+
+  /* =========================================================
+     Buttons
+     ========================================================= */
+  .htf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 700;
+    transition: transform 200ms ease, filter 200ms ease, background-color 200ms ease;
+    user-select: none;
+  }
+
+  .htf-btn:active {
+    transform: translateY(1px);
+  }
+
+  .htf-btn-primary {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .htf-btn-primary:hover {
+    filter: brightness(0.9);
+  }
+
+  .htf-btn-secondary {
+    background: transparent;
+    border: 2px solid var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .htf-btn-secondary:hover {
+    background: rgba(59, 130, 246, 0.08);
+  }
+
+  /* =========================================================
+     External links (no underline default, underline on hover, ↗)
+     ========================================================= */
+  .htf-external-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .htf-external-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .htf-external-link::after {
+    content: " ↗";
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     Subtle enter animation helper
+     ========================================================= */
+  @keyframes htf-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .htf-fade-in-up {
+    animation: htf-fade-in-up 400ms ease-out both;
   }
 }
 
@@ -191,6 +339,31 @@
 .community-circle--square {
   border-radius: 8px;
   background: #f4f5f7;
+}
+
+/* Hexagon member */
+.community-circle--hexagon {
+  background: #f4f5f7;
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+}
+
+/* Pentagon member */
+.community-circle--pentagon {
+  background: #f4f5f7;
+  clip-path: polygon(
+    50% 0%,
+    100% 38%,
+    81% 100%,
+    19% 100%,
+    0% 38%
+  );
 }
 
 /* Triangle member */

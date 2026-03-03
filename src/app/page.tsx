@@ -1,36 +1,42 @@
 'use client';
 
 import Link from 'next/link';
+import { FileText, Home as HomeIcon, HeartPulse, Users, MessageCircle } from 'lucide-react';
 
 import Hero from '@/components/Hero';
 import SectionCards from '@/components/SectionCards';
 
-export default function Home() {
+export default function HomePage() {
   const mainSections = [
     {
       title: 'Legal Stuff',
       description: 'Visas, residency permits, and legal requirements.',
       href: '/legal',
+      icon: <FileText className="h-5 w-5" aria-hidden="true" />,
     },
     {
       title: 'Housing',
       description: 'Find accommodation, understand contracts, and get CAF aid.',
       href: '/housing',
+      icon: <HomeIcon className="h-5 w-5" aria-hidden="true" />,
     },
     {
       title: 'Wellbeing',
       description: 'Healthcare, mental health resources, and adapting to French culture.',
       href: '/wellbeing',
+      icon: <HeartPulse className="h-5 w-5" aria-hidden="true" />,
     },
     {
       title: 'Associations',
       description: 'Join student groups, international clubs, and volunteer organizations.',
       href: '/associations',
+      icon: <Users className="h-5 w-5" aria-hidden="true" />,
     },
     {
       title: 'Forum',
       description: 'Connect with other students, ask questions, and share experiences.',
       href: '/forum',
+      icon: <MessageCircle className="h-5 w-5" aria-hidden="true" />,
     },
   ];
 

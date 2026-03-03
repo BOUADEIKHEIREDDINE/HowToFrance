@@ -144,12 +144,12 @@ export default function IntroOverlay() {
       setShowCommunity(true);
       setPhase('community_in');
 
-      // 2) Texte A: "This is the frensh community" – apparaît vite après les cercles
+      // 2) Texte A: "This is the french community" – apparaît vite après les cercles
       setIsTextVisible(false);
       await wait(DURATIONS.textFade);
       if (cancelled || skippedRef.current) return;
 
-      setCurrentMessage('This is the frensh community');
+      setCurrentMessage('This is the french community');
       setIsTextVisible(true);
       setPhase('community_text');
       await wait(DURATIONS.textCommunity);
@@ -325,20 +325,20 @@ export default function IntroOverlay() {
             id="circle-1"
             className="shape community-circle community-circle--circle circle-1"
           />
-          {/* Square */}
+          {/* Pentagon (was square) */}
           <div
             id="circle-2"
-            className="shape community-circle community-circle--square circle-2"
+            className="shape community-circle community-circle--pentagon circle-2"
           />
           {/* Triangle */}
           <div
             id="circle-3"
             className="shape community-circle community-circle--triangle circle-3"
           />
-          {/* Circle */}
+          {/* Hexagon (second circle) */}
           <div
             id="circle-4"
-            className="shape community-circle community-circle--circle circle-4"
+            className="shape community-circle community-circle--hexagon circle-4"
           />
         </div>
 

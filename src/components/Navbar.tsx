@@ -40,7 +40,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-40">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-background/90 to-transparent" />
-      <div className="border-b border-border/70 bg-background/70 backdrop-blur-xl">
+      <div className="border-b border-border/70 bg-white/70 backdrop-blur-xl shadow-[0_1px_0_rgba(0,0,0,0.06)]">
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <Logo />
@@ -57,7 +57,9 @@ export default function Navbar() {
                     href={item.href}
                     className={cn(
                       'group relative z-10 rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                      active ? 'text-foreground' : 'text-mutedForeground hover:text-foreground',
+                      active
+                        ? 'text-foreground font-semibold'
+                        : 'text-mutedForeground hover:text-foreground',
                     )}
                   >
                     {active && (
@@ -73,7 +75,12 @@ export default function Navbar() {
                     )}
                     <span className="relative">
                       {item.label}
-                      <span className="absolute -bottom-1 left-0 right-0 h-px origin-left scale-x-0 bg-accent/70 transition-transform duration-200 group-hover:scale-x-100" />
+                      <span
+                        className={cn(
+                          'absolute -bottom-1 left-0 right-0 origin-left bg-accent transition-transform duration-200',
+                          active ? 'h-0.5 scale-x-100' : 'h-px scale-x-0 group-hover:scale-x-100',
+                        )}
+                      />
                     </span>
                   </Link>
                 );

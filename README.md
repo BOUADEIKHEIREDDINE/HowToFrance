@@ -19,6 +19,25 @@ python app.py
 
 This clears caches (`.next` + temp), installs dependencies if needed, then starts the dev server.
 
+---
+
+## What this website does
+
+Once the app is running on `http://localhost:3000`, you get a **single place to onboard international students in France**, with a focus on **Villejuif / Paris area**:
+
+- A **Home** page that explains who the site is for and how to use it.
+- A **clear structure** with sections:
+  - `/legal` – visas, residence permits, CVEC, health insurance, official links.
+  - `/housing` – CROUS, private rentals, CAF / APL, Visale, why Villejuif is cheaper than Paris.
+  - `/wellbeing` – healthcare, mental health, reimbursements, student mutuelles.
+  - `/associations` – student clubs, local associations, integration opportunities.
+  - `/forum` – actually a **rich FAQ** page written for Villejuif & Paris.
+
+On top of the static content:
+
+- A **floating Help Center** button to jump directly to the FAQ.
+- A **language switcher** in the navbar to translate the whole site.
+
 ## Key features
 
 - **FAQ**: available at `/forum` (custom-styled, matches the other pages).

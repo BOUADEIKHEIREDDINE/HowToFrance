@@ -19,6 +19,7 @@ export default function HousingPage() {
           { label: 'Compare Options', href: '#compare' },
           { label: 'CROUS', href: '#crous' },
           { label: 'Other Solutions', href: '#solutions' },
+          { label: 'Tenant rights', href: '#tenant-rights' },
           { label: 'CAF Aid', href: '#caf' },
           { label: 'Why Villejuif', href: '#why-villejuif' },
         ]}
@@ -31,6 +32,7 @@ export default function HousingPage() {
           { id: 'compare', label: 'Compare options' },
           { id: 'crous', label: 'CROUS' },
           { id: 'solutions', label: 'Other solutions' },
+          { id: 'tenant-rights', label: 'Tenant rights' },
           { id: 'caf', label: 'CAF + Visale' },
           { id: 'why-villejuif', label: 'Why Villejuif' },
           { id: 'budget', label: 'Budget estimator' },
@@ -160,6 +162,70 @@ export default function HousingPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section id="tenant-rights" className="py-10">
+          <h2 className="htf-h2">Logement & droits du locataire (guide facile)</h2>
+          <p className="mt-3 htf-body max-w-3xl">
+            Trouver un logement est une étape clé. Voici les options, les documents importants (bail, dépôt de garantie),
+            l&apos;état des lieux, et les règles pour éviter les arnaques.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="htf-card p-6 border-t-4" style={{ borderTopColor: 'var(--color-success)' }}>
+              <div className="text-3xl" aria-hidden="true">🏘️</div>
+              <div className="mt-3 font-extrabold text-[var(--color-primary)]">1) Choisir son type de logement</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li><span className="font-bold text-[var(--color-text)]">CROUS</span> : le moins cher, mais très demandé (DSE tôt).</li>
+                <li><span className="font-bold text-[var(--color-text)]">Résidences privées</span> : confort + services, plus cher.</li>
+                <li><span className="font-bold text-[var(--color-text)]">Privé</span> : studio/coloc, plus de choix, souvent besoin d&apos;un garant.</li>
+                <li><span className="font-bold text-[var(--color-text)]">Chez l&apos;habitant</span> : économique + immersion, moins d&apos;indépendance.</li>
+              </ul>
+              <div className="mt-4 rounded-xl bg-muted/40 border border-border p-4 text-sm text-[var(--color-muted)]">
+                Check-list : budget, priorités (prix/indépendance/services), zone, transports.
+              </div>
+            </div>
+
+            <div className="htf-card p-6 border-t-4" style={{ borderTopColor: 'var(--color-accent)' }}>
+              <div className="text-3xl" aria-hidden="true">📄</div>
+              <div className="mt-3 font-extrabold text-[var(--color-primary)]">2) Bail & dépôt de garantie</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li><span className="font-bold text-[var(--color-text)]">Bail étudiant</span> : souvent 9 mois (année universitaire).</li>
+                <li>
+                  <span className="font-bold text-[var(--color-text)]">Dépôt de garantie</span> (max légal) : 1 mois (non meublé),
+                  2 mois (meublé) hors charges.
+                </li>
+                <li><span className="font-bold text-[var(--color-text)]">Restitution</span> : 1 mois si état identique, 2 mois si différences.</li>
+              </ul>
+              <div className="mt-4 text-sm text-[var(--color-muted)]">
+                Source : <ExternalLink href="https://www.service-public.gouv.fr/particuliers/vosdroits/F31269">Service-Public (dépôt de garantie)</ExternalLink>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="htf-card p-6 border-l-4" style={{ borderLeftColor: 'var(--color-warning)' }}>
+              <div className="font-extrabold text-[var(--color-primary)]">3) État des lieux (ultra important)</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li>Faites l&apos;état des lieux d&apos;entrée en notant chaque défaut.</li>
+                <li>Prenez des photos/vidéos (preuve).</li>
+                <li>À la sortie : logement propre + comparaison avec l&apos;entrée.</li>
+              </ul>
+            </div>
+
+            <div className="htf-card p-6 border-l-4" style={{ borderLeftColor: 'var(--color-danger)' }}>
+              <div className="font-extrabold text-[var(--color-primary)]">4) Anti-arnaques (règles d&apos;or)</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li><span className="font-bold text-[var(--color-text)]">Ne payez jamais</span> avant visite + bail signé.</li>
+                <li>Évitez Western Union / mandats cash.</li>
+                <li>Méfiez-vous des offres trop belles.</li>
+                <li>Lisez le bail, demandez de l&apos;aide si besoin.</li>
+              </ul>
+              <div className="mt-4 text-sm text-[var(--color-muted)]">
+                Plus d&apos;infos : <ExternalLink href="https://www.etudiant.gouv.fr/fr/louer-un-logement-dans-le-prive-conseils-demarches-988">Étudiant.gouv.fr</ExternalLink>
+              </div>
+            </div>
           </div>
         </section>
 

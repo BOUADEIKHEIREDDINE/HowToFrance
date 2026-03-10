@@ -17,6 +17,7 @@ export default function LegalPage() {
         pills={[
           { label: 'Documents', href: '#documents' },
           { label: 'Residence Permit', href: '#residence' },
+          { label: 'Banking', href: '#banking' },
           { label: 'Health Insurance', href: '#health-insurance' },
           { label: 'CSS', href: '#css' },
           { label: 'Mutual Options', href: '#mutual-options' },
@@ -30,6 +31,7 @@ export default function LegalPage() {
           { id: 'documents', label: 'Documents' },
           { id: 'residence', label: 'Residence permit' },
           { id: 'villejuif', label: 'Villejuif location' },
+          { id: 'banking', label: 'Banking' },
           { id: 'health-insurance', label: 'Health insurance' },
           { id: 'css', label: 'CSS' },
           { id: 'reimbursements', label: 'Reimbursements' },
@@ -217,6 +219,85 @@ export default function LegalPage() {
               <div className="flex-none">
                 <CopyButton text="2 avenue Larroumès, 94240 L'Haÿ-les-Roses" />
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="banking" className="py-10">
+          <h2 className="htf-h2">Guide bancaire (étudiant étranger) — 2024–2026</h2>
+          <p className="mt-3 htf-body max-w-3xl">
+            Ouvrir un compte bancaire est essentiel en France (APL, salaire, prélèvements, RIB). Voici un guide simple
+            pour choisir entre néobanques et banques traditionnelles, et préparer vos documents.
+          </p>
+
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="htf-card p-6 border-t-4" style={{ borderTopColor: 'var(--color-accent)' }}>
+              <div className="text-3xl" aria-hidden="true">🏦</div>
+              <div className="mt-3 font-extrabold text-[var(--color-primary)]">Pourquoi ouvrir un compte ?</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li>Recevoir aides/salaires (APL, bourses, job étudiant).</li>
+                <li>Payer loyer/factures plus facilement (prélèvements).</li>
+                <li>Obtenir un <span className="font-bold text-[var(--color-text)]">RIB</span> (demandé partout).</li>
+              </ul>
+              <div className="mt-4 text-sm text-[var(--color-muted)]">
+                Source : <ExternalLink href="https://www.campusfrance.org/fr/ouvrir-un-compte-bancaire-en-france">Campus France</ExternalLink>
+              </div>
+            </div>
+
+            <div className="htf-card p-6 border-t-4" style={{ borderTopColor: 'var(--color-success)' }}>
+              <div className="text-3xl" aria-hidden="true">📄</div>
+              <div className="mt-3 font-extrabold text-[var(--color-primary)]">Check-list (banque traditionnelle)</div>
+              <ul className="mt-3 grid gap-2 text-sm text-[var(--color-muted)]">
+                <li>Pièce d&apos;identité (passeport / CNI UE / titre de séjour).</li>
+                <li>Justificatif de domicile &lt; 3 mois (ou attestation d&apos;hébergement + pièces du logeur).</li>
+                <li>Justificatif de scolarité (certificat / carte étudiant).</li>
+                <li>Visa étudiant si non-UE.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-6 htf-card p-6">
+            <div className="font-extrabold text-[var(--color-primary)]">Néobanques (ouverture rapide)</div>
+            <div className="mt-3 overflow-x-auto rounded-xl border border-border">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/40 text-[var(--color-muted)]">
+                  <tr>
+                    <th className="p-3 text-left font-extrabold">Néobanque</th>
+                    <th className="p-3 text-left font-extrabold">Points forts</th>
+                    <th className="p-3 text-left font-extrabold">Docs souvent demandés</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[var(--color-text)]">
+                  <tr className="border-t">
+                    <td className="p-3 font-semibold">Nickel</td>
+                    <td className="p-3 text-[var(--color-muted)]">Très simple à ouvrir, souvent avec passeport.</td>
+                    <td className="p-3 text-[var(--color-muted)]">Passeport / CNI (UE).</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3 font-semibold">Revolut</td>
+                    <td className="p-3 text-[var(--color-muted)]">Top international (multi-devises).</td>
+                    <td className="p-3 text-[var(--color-muted)]">Pièce d&apos;identité + parfois justificatif.</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3 font-semibold">N26</td>
+                    <td className="p-3 text-[var(--color-muted)]">App simple, suivi budget, notifications.</td>
+                    <td className="p-3 text-[var(--color-muted)]">Pièce d&apos;identité + domicile.</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3 font-semibold">bunq</td>
+                    <td className="p-3 text-[var(--color-muted)]">Offres étudiantes selon périodes.</td>
+                    <td className="p-3 text-[var(--color-muted)]">Pièce d&apos;identité + domicile.</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-3 font-semibold">Lydia</td>
+                    <td className="p-3 text-[var(--color-muted)]">Pratique pour payer/recevoir entre amis.</td>
+                    <td className="p-3 text-[var(--color-muted)]">Pièce d&apos;identité.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 text-sm text-[var(--color-muted)]">
+              Astuce : démarrez avec une néobanque pour avoir un RIB vite, puis ouvrez une banque traditionnelle si besoin.
             </div>
           </div>
         </section>

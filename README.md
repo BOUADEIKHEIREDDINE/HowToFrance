@@ -1,6 +1,9 @@
 # How To France (HTF)
 
-A Next.js guide platform for international students in France (Villejuif & Paris): legal steps, housing, wellbeing, associations, and a full FAQ.
+Welcome to **How To France** — a modern, student‑friendly guide to help you **land in France with confidence**.
+
+Moving to a new country is exciting… and sometimes overwhelming. HTF turns the “Where do I start?” into a clear path:
+**legal steps**, **housing**, **health & wellbeing**, **student life**, and a **rich FAQ** focused on **Villejuif & Paris**.
 
 ## Run locally
 

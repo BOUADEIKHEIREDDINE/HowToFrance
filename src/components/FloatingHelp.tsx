@@ -48,7 +48,7 @@ export default function FloatingHelp() {
 
         <SheetContent>
           <SheetHeader>
-            <SheetTitle>Help Center</SheetTitle>
+            <SheetTitle>Help Center & FAQ</SheetTitle>
           </SheetHeader>
 
           <div className="mt-4 space-y-3">
@@ -57,26 +57,26 @@ export default function FloatingHelp() {
               <div className="mt-3 grid gap-2">
                 <Button asChild variant="accent">
                   <Link href="/forum" onClick={() => setOpen(false)}>
-                    <MessageCircle className="h-4 w-4" />
-                    Ask a question
+                    <BookOpen className="h-4 w-4" />
+                    Open FAQ
                     <ArrowRight className="h-4 w-4 ml-auto" />
                   </Link>
+                </Button>
+
+                <Button variant="secondary" disabled>
+                  <MessageCircle className="h-4 w-4" />
+                  Ask a question (soon)
                 </Button>
 
                 <Button variant="secondary" disabled>
                   <LifeBuoy className="h-4 w-4" />
                   Contact support (soon)
                 </Button>
-
-                <Button variant="secondary" disabled>
-                  <BookOpen className="h-4 w-4" />
-                  FAQ (soon)
-                </Button>
               </div>
             </div>
 
             <div className="text-xs text-mutedForeground">
-              Tip: use the “Forum” to get answers from other students.
+              Tip: start with the FAQ — it covers visas, housing, health, budget, and integration in Villejuif & Paris.
             </div>
           </div>
         </SheetContent>

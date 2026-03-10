@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Menu, Languages } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { Menu } from 'lucide-react';
+import { useMemo } from 'react';
 
 import Logo from './Logo';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 type NavItem = { label: string; href: string };
 
@@ -30,12 +31,10 @@ export default function Navbar() {
       { label: 'Housing', href: '/housing' },
       { label: 'Wellbeing', href: '/wellbeing' },
       { label: 'Associations', href: '/associations' },
-      { label: 'Forum', href: '/forum' },
+      { label: 'FAQ', href: '/forum' },
     ],
     [],
   );
-
-  const [lang, setLang] = useState<'EN' | 'FR'>('EN');
 
   return (
     <nav className="sticky top-0 z-40">
@@ -89,57 +88,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Language segmented (keeps existing EN/FR concept without breaking routes) */}
-            <div className="hidden sm:flex items-center rounded-full border border-border/70 bg-card/60 p-1 shadow-sm backdrop-blur-xl">
-              <button
-                type="button"
-                onClick={() => setLang('EN')}
-                className={cn(
-                  'relative rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
-                  lang === 'EN' ? 'text-foreground' : 'text-mutedForeground hover:text-foreground',
-                )}
-                aria-pressed={lang === 'EN'}
-              >
-                {lang === 'EN' && (
-                  <motion.span
-                    layoutId="lang-pill"
-                    className="absolute inset-0 -z-10 rounded-full bg-muted/80"
-                    transition={
-                      reduce
-                        ? { duration: 0 }
-                        : { type: 'spring', stiffness: 420, damping: 36 }
-                    }
-                  />
-                )}
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang('FR')}
-                className={cn(
-                  'relative rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
-                  lang === 'FR' ? 'text-foreground' : 'text-mutedForeground hover:text-foreground',
-                )}
-                aria-pressed={lang === 'FR'}
-              >
-                {lang === 'FR' && (
-                  <motion.span
-                    layoutId="lang-pill"
-                    className="absolute inset-0 -z-10 rounded-full bg-muted/80"
-                    transition={
-                      reduce
-                        ? { duration: 0 }
-                        : { type: 'spring', stiffness: 420, damping: 36 }
-                    }
-                  />
-                )}
-                FR
-              </button>
-              <span className="px-2 text-mutedForeground">
-                <Languages className="h-4 w-4" aria-hidden="true" />
-              </span>
-            </div>
-
+            <LanguageSwitcher />
             {/* Mobile menu */}
             <Sheet>
               <SheetTrigger asChild>
@@ -175,27 +124,7 @@ export default function Navbar() {
                   })}
                 </div>
 
-                <div className="mt-6">
-                  <div className="text-xs font-semibold text-mutedForeground mb-2">
-                    Language
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant={lang === 'EN' ? 'default' : 'secondary'}
-                      size="sm"
-                      onClick={() => setLang('EN')}
-                    >
-                      EN
-                    </Button>
-                    <Button
-                      variant={lang === 'FR' ? 'default' : 'secondary'}
-                      size="sm"
-                      onClick={() => setLang('FR')}
-                    >
-                      FR
-                    </Button>
-                  </div>
-                </div>
+                {/* We could later add a mobile-friendly language switcher here if needed */}
               </SheetContent>
             </Sheet>
           </div>

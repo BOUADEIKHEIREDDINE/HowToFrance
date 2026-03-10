@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import FloatingHelp from '@/components/FloatingHelp';
 import IntroOverlay from '@/components/IntroOverlay';
 import BackToTopButton from '@/components/BackToTopButton';
+import GoogleTranslateLoader from '@/components/GoogleTranslateLoader';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className={inter.className + ' bg-background text-foreground'}>
         <IntroOverlay />
         <Navbar />
@@ -28,6 +29,7 @@ export default function RootLayout({
         <Footer />
         <FloatingHelp />
         <BackToTopButton />
+        <GoogleTranslateLoader />
       </body>
     </html>
   );

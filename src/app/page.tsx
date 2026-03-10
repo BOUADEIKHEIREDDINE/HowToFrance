@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FileText, Home as HomeIcon, HeartPulse, Users, MessageCircle } from 'lucide-react';
+import { FileText, Home as HomeIcon, HeartPulse, Users, BookOpen } from 'lucide-react';
 
 import Hero from '@/components/Hero';
 import SectionCards from '@/components/SectionCards';
@@ -33,10 +33,10 @@ export default function HomePage() {
       icon: <Users className="h-5 w-5" aria-hidden="true" />,
     },
     {
-      title: 'Forum',
-      description: 'Connect with other students, ask questions, and share experiences.',
+      title: 'FAQ',
+      description: 'Quick answers on visas, health, housing, budget, and integration.',
       href: '/forum',
-      icon: <MessageCircle className="h-5 w-5" aria-hidden="true" />,
+      icon: <BookOpen className="h-5 w-5" aria-hidden="true" />,
     },
   ];
 
@@ -44,7 +44,7 @@ export default function HomePage() {
     <>
       <Hero
         title="Your premium guide to settle in France."
-        subtitle="Legal steps, housing, wellbeing, communities — with a modern UX and a helpful forum."
+        subtitle="Legal steps, housing, wellbeing, communities — with a modern UX and a comprehensive FAQ."
       />
 
       <SectionCards
@@ -98,7 +98,7 @@ export default function HomePage() {
                 <div className="rounded-[var(--radius)] border border-border bg-muted/40 p-4">
                   <div className="text-sm font-semibold">2. Ask</div>
                   <p className="mt-1 text-xs text-mutedForeground">
-                    Use the forum to get answers from the community.
+                    Start with the FAQ to find answers fast.
                   </p>
                 </div>
                 <div className="rounded-[var(--radius)] border border-border bg-muted/40 p-4">
@@ -114,7 +114,7 @@ export default function HomePage() {
                   href="/forum"
                   className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primaryForeground hover:bg-primary/90 transition"
                 >
-                  Ask on the Forum
+                  Open the FAQ
                 </Link>
                 <Link
                   href="/legal"

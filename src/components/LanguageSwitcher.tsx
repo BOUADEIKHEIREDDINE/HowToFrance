@@ -54,8 +54,8 @@ function applyRtlIfNeeded(code: LangCode) {
     html.setAttribute('lang', 'ar');
     html.classList.add('translated-ar');
   } else {
-    // Default document language when not in Arabic
-    html.setAttribute('lang', 'fr');
+    // Default document language when not in Arabic (original content is English)
+    html.setAttribute('lang', 'en');
     html.classList.remove('translated-ar');
   }
 }
@@ -79,7 +79,7 @@ function changeLanguage(langCode: LangCode) {
     }
 
     clearGoogleTranslateCookies();
-    applyRtlIfNeeded('fr');
+    applyRtlIfNeeded('en');
     window.location.reload();
     return;
   }
@@ -112,7 +112,7 @@ export default function LanguageSwitcher() {
 
     // Default: original English content
     setActive('en');
-    applyRtlIfNeeded('fr');
+    applyRtlIfNeeded('en');
   }, []);
 
   const onSelect = useCallback(

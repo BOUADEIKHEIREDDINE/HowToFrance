@@ -4,8 +4,12 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
+    google?: {
+      translate?: {
+        TranslateElement: new (options: unknown, elementId: string) => void;
+      };
+    };
     googleTranslateElementInit?: () => void;
-    google?: any;
   }
 }
 
@@ -13,42 +17,36 @@ export default function GoogleTranslateLoader() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Ensure init function exists before loading the script
-    window.googleTranslateElementInit = () => {
-      if (!window.google || !window.google.translate) return;
+    // If Google Translate is already loaded, do nothing
+    if (window.google?.translate?.TranslateElement) {
+      return;
+    }
 
-      // eslint-disable-next-line no-new
+    // Define the callback required by Google Translate script
+    window.googleTranslateElementInit = () => {
+      if (!window.google?.translate?.TranslateElement) return;
+
+      // We keep the widget hidden; language is controlled via cookies + buttons
       new window.google.translate.TranslateElement(
         {
-          // Source language: the site content is in English
           pageLanguage: 'en',
-          includedLanguages: 'en,ar,es,hi,fr',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
           autoDisplay: false,
         },
         'google_translate_element',
       );
     };
 
-    // Avoid injecting the script multiple times
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      'script[src*="translate.google.com/translate_a/element.js"]',
-    );
-    if (existingScript) return;
+    const scriptId = 'google-translate-loader-script';
+    if (document.getElementById(scriptId)) return;
 
     const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src =
-      '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    script.id = scriptId;
+    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     script.async = true;
-    document.head.appendChild(script);
-
-    return () => {
-      // Keep the script / widget alive across route changes; no cleanup
-    };
+    document.body.appendChild(script);
   }, []);
 
-  // Hidden container for Google widget (required but fully hidden via CSS)
+  // Hidden container required by Google Translate. We don't show the default UI.
   return <div id="google_translate_element" style={{ display: 'none' }} />;
 }
 

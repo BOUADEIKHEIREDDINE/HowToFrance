@@ -53,7 +53,7 @@ export default function FloatingHelp() {
 
           <div className="mt-4 space-y-3">
             <div className="rounded-[var(--radius)] border border-border bg-muted/40 p-4">
-              <div className="text-sm font-semibold">Quick actions</div>
+              <div className="text-sm font-semibold">Quick topics</div>
               <div className="mt-3 grid gap-2">
                 <Button asChild variant="accent">
                   <Link href="/forum" onClick={() => setOpen(false)}>

@@ -23,7 +23,7 @@ export default function HousingPage() {
           { label: 'CAF Aid', href: '#caf' },
           { label: 'Why Villejuif', href: '#why-villejuif' },
         ]}
-        rightTitle="Quick prices"
+        rightTitle="Quick topics"
         rightEmojis={['🏠', '💶', '🔑', '📄', '✅', '🚇']}
       />
 

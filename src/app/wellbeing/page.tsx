@@ -23,7 +23,7 @@ export default function WellbeingPage() {
           { label: 'Learn French', href: '#learn-french' },
           { label: 'Culture & Leisure', href: '#perks' },
         ]}
-        rightTitle="Quick icons"
+        rightTitle="Quick topics"
         rightEmojis={['🍽️', '🧠', '🇫🇷', '🎭', '🤝', '✨']}
       />
 

@@ -22,7 +22,7 @@ export default function LegalPage() {
           { label: 'CSS', href: '#css' },
           { label: 'Mutual Options', href: '#mutual-options' },
         ]}
-        rightTitle="Quick icons"
+        rightTitle="Quick topics"
         rightEmojis={['📄', '🏠', '💳', '🏥', '✅', '🎓']}
       />
 

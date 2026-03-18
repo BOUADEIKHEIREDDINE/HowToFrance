@@ -16,7 +16,7 @@ export default function AssociationsPage() {
           { label: '🇫🇷 French Lessons', href: '#french-lessons' },
           { label: '🌍 Networking', href: '#networking' },
         ]}
-        rightTitle="Community icons"
+        rightTitle="Quick topics"
         rightEmojis={['🤝', '🧠', '🍎', '🇫🇷', '🎓', '🌍']}
       />
 

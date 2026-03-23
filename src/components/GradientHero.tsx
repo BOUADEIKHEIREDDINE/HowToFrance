@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 type HeroPill = { label: string; href: string };
 
 type GradientHeroProps = {
+  eyebrow?: string;
   title: string;
   subtitle?: string;
   gradientFrom: string;
@@ -16,6 +17,7 @@ type GradientHeroProps = {
 };
 
 export default function GradientHero({
+  eyebrow,
   title,
   subtitle,
   gradientFrom,
@@ -39,6 +41,11 @@ export default function GradientHero({
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
+            {eyebrow && (
+              <div className="mb-3 text-white/90 text-xs font-extrabold uppercase tracking-[0.12em]">
+                {eyebrow}
+              </div>
+            )}
             <h1 className="text-white text-4xl md:text-[2.75rem] font-extrabold tracking-tight leading-[1.05]">
               {title}
             </h1>

@@ -27,6 +27,7 @@ export default function Navbar() {
   const navItems = useMemo<NavItem[]>(
     () => [
       { label: 'Home', href: '/' },
+      { label: 'Our Purpose', href: '/outreach' },
       { label: 'Legal Stuff', href: '/legal' },
       { label: 'Housing', href: '/housing' },
       { label: 'Wellbeing', href: '/wellbeing' },
